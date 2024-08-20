@@ -69,7 +69,8 @@ let championsLeagueData = {
             "team3": "Zenit St. Petersburg",
             "team4": "KAA Gent"
         }
-    ]
+    ],
+    "predictions":[],
 
 };
 
@@ -81,14 +82,21 @@ app.get('/api/data', (req, res) => {
 });
 
 // Endpoint para agregar un nuevo dato
-app.post('/api/data', (req, res) => {
-    const newItem = req.body;
-    const itemExists = championsLeagueData.some(item => item.groups.group === newItem.groups.group);
-    if (itemExists) {
-        return res.status(400).json({ error: 'Group already exists' });
+app.post('/api/data/predictions', (req, res) => {
+    const newTeam = req.body;
+    newTeam.id = championsLeagueData.predictions.length + 1;
+    console.log("||" + newTeam)
+   /*const teamExists = championsLeagueData.predictions.some(item => item.name === newTeam.name);
+    if (teamExists) {
+        return res.status(400).json({ error: 'Name already exists' });
+    }*/
+    const newPrediction = {
+        id: newTeam.id,
+        teamName: newTeam.name,
     }
-    championsLeagueData.push(newItem);
-    res.status(201).json(newItem);
+    console.log("//" + newPrediction)
+    championsLeagueData.predictions.push(newPrediction);
+    res.status(201).json(newPrediction);
 });
 
 // Endpoint para modificar un dato existente
