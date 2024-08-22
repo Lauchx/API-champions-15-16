@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// Middleware para parsear el cuerpo de las solicitudes como JSON
+// Middleware para parsear el cuerpo de las solicitudes JSON
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -85,7 +85,6 @@ app.get('/api/data', (req, res) => {
 app.post('/api/data/predictions', (req, res) => {
     const newTeam = req.body;
     newTeam.id = championsLeagueData.predictions.length + 1;
-    console.log("||" + newTeam)
    /*const teamExists = championsLeagueData.predictions.some(item => item.name === newTeam.name);
     if (teamExists) {
         return res.status(400).json({ error: 'Name already exists' });
@@ -94,40 +93,43 @@ app.post('/api/data/predictions', (req, res) => {
         id: newTeam.id,
         teamName: newTeam.name,
     }
-    console.log("//" + newPrediction)
     championsLeagueData.predictions.push(newPrediction);
     res.status(201).json(newPrediction);
 });
 
-// Endpoint para modificar un dato existente
-app.put('/api/data/:id', (req, res) => {
-    const id = parseInt(req.params.groups.group);
-    const updatedItem = req.body;
 
-    // Comprobamos si existe el dato
-    if (id < 0 || id >= championsLeagueData.length) {
+app.put('/api/data/:id', (req, res) => {
+    const updatedTeam = req.body;
+
+    if (id < 0 || id >= championsLeagueData.predictions.length) {
         return res.status(404).send('Item not found');
     }
 
-    // Actualizamos el dato
-    championsLeagueData[id] = updatedItem;
-    res.json(updatedItem);
+    updatedTeam = {
+        teamName: newTeam.name,
+    }
+
+    championsLeagueData.predictions[id] = updatedTeam;
+    res.json(updatedTeam);
 });
 
 // Endpoint para eliminar un dato
 app.delete('/api/data/:id', (req, res) => {
     const id = parseInt(req.params.id);
+    console.log(id +  "ID")
 
-    // Comprobamos si existe el dato
-    if (id < 0 || id >= championsLeagueData.length) {
-        return res.status(404).send('Item not found');
+    for(let i= 0; i < championsLeagueData.predictions.length; i++){
+        if(championsLeagueData.predictions[i].id == id){
+            championsLeagueData.predictions.splice(i, 1);
+                res.status(204).send();
+                return;
+        }
     }
-
-    // Eliminamos el dato
-    championsLeagueData.groups.splice(id, 1);
-    res.status(204).send(); // 204 No Content
+    return res.status(404).send('Item not found');
+   
 });
 
+//seleccionar por id
 app.get('/api/championsLeagueData/:id', (req, res) => {
     const id = req.params.id;
     const item = championsLeagueData.find(item => item.id === id);
