@@ -106,7 +106,7 @@ app.put('/api/data/:id', (req, res) => {
     }
 
     updatedTeam = {
-        teamName: newTeam.name,
+        teamName: newTeam.name, // creo que es re.name (no lo pobré)
     }
 
     championsLeagueData.predictions[id] = updatedTeam;
